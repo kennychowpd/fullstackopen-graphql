@@ -46,14 +46,7 @@ enum YesNo {
 
 type Query {
   personCount: Int!
-  allPersons: (root, args) => {
-    if (!args.phone) {
-      return persons
-    }
-    const byPhone = (person) =>
-      args.phone === 'YES' ? person.phone : !person.phone
-    return persons.filter(byPhone)
-  },
+  allPersons(phone: YesNo): [Person!]!
   findPerson(name: String!): Person
 }
 
@@ -74,7 +67,14 @@ type Mutation {
 const resolvers = {
   Query: {
     personCount: () => persons.length,
-    allPersons: () => persons,
+    allPersons: (root, args) => {
+      if (!args.phone) {
+        return persons
+      }
+      const byPhone = (person) =>
+        args.phone === 'YES' ? person.phone : !person.phone
+      return persons.filter(byPhone)
+    },
     findPerson: (root, args) =>
       persons.find(p => p.name === args.name)
   },
@@ -109,7 +109,7 @@ const resolvers = {
       const updatedPerson = { ...person, phone: args.phone }
       persons = persons.map(p => p.name === args.name ? updatedPerson : p)
       return updatedPerson
-    }   
+    }
   }
 }
 
