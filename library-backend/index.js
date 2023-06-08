@@ -83,11 +83,12 @@ let books = [
 const typeDefs = `
 
   type Book {
-    title: String!
-    author: String!
-    published: Int!
-    genres:[String!]!
-  }
+  title: String!
+  published: Int!
+  author: Author!
+  genres: [String!]!
+  id: ID!
+}
 
   type Author {
     name: String!
@@ -109,7 +110,7 @@ const typeDefs = `
       author: String!
       published: Int!
       genres:[String!]!
-    ): Book
+    ): Book!
     editAuthor(
       name: String!
       setBornTo: Int!
