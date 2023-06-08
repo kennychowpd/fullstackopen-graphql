@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, EDIT_BIRTHYEAR } from '../guery'
 import { useState } from 'react'
-
-
+import Select from 'react-select'
 
 
 const Authors = (props) => {
-  const [name, setName] = useState('')
+
   const [born, setBorn] = useState('')
+  const [selectedOption, setSelectedOption] = useState('')
   const result = useQuery(ALL_AUTHORS)
   const [editBirthYear] = useMutation(EDIT_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
@@ -25,17 +25,18 @@ const Authors = (props) => {
 
   const authors = result.data.allAuthors
 
+  const options = authors.map(author => ({ value: author.name, label: author.name }))
+
 
   const submit = async (event) => {
     event.preventDefault()
-    console.log(name, born)
+    const name = selectedOption.value
+    await editBirthYear({ variables: { name: name, setBornTo: born } })
 
-    await editBirthYear({variables: {name: name, setBornTo: born}})
-
-    setName('')
+    setSelectedOption('')
     setBorn('')
   }
-  
+
 
   return (
     <div>
@@ -58,9 +59,7 @@ const Authors = (props) => {
       </table>
       <h3>Set birthyear</h3>
       <form onSubmit={submit}>
-        <div>
-          name<input type='text' value={name} onChange={(e) => setName(e.target.value)}></input>
-        </div>
+        <Select defaultValue={selectedOption} onChange={setSelectedOption} options={options} />
         <div>
           born<input type='number' value={born} onChange={(e) => setBorn(parseInt(e.target.value))}></input>
         </div>
