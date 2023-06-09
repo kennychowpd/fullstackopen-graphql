@@ -14,15 +14,11 @@ const Recommendations = (props) => {
       loading...
     </div>
   }
-  console.log(111,currentUserQurey)
   
   const selectedGenre = currentUserQurey.data.me.favoriteGenre
   const books = booksQuery.data.allBooks
 
-  console.log(books)
-  console.log(selectedGenre)
   const filteredBooks = books.filter(book => book.genres.includes(selectedGenre))
-  console.log(filteredBooks)
   return (
     <div>
       <h2>books</h2>
