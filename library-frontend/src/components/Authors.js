@@ -3,7 +3,6 @@ import { ALL_AUTHORS, ALL_BOOKS, EDIT_BIRTHYEAR } from '../guery'
 import { useState } from 'react'
 import Select from 'react-select'
 
-
 const Authors = (props) => {
 
   const [born, setBorn] = useState('')

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../guery'
 
-
-
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -62,6 +60,7 @@ const NewBook = (props) => {
           />
         </div>
         <div>
+          <div>genres: {genres.join(' ')}</div>
           <input
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
@@ -70,7 +69,6 @@ const NewBook = (props) => {
             add genre
           </button>
         </div>
-        <div>genres: {genres.join(' ')}</div>
         <button type="submit">create book</button>
       </form>
     </div>
