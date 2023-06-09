@@ -2,7 +2,7 @@ require('dotenv').config()
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
-
+const { GraphQLError } = require('graphql')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -93,12 +93,27 @@ const resolvers = {
   Mutation: {
     // works
     addBook: async (root, args) => {
+      if (args.title.length < 5 ){
+        throw new GraphQLError('Title must be at least 5 letters', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title
+          }
+        })
+      }
+      if (args.author.length < 4 ){
+        throw new GraphQLError('Author name must be at least 4 letters', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.author
+          }
+        })
+      }
       let author = await Author.findOne({ name: args.author })
       if (!author) {
         author = new Author({ name: args.author })
         await author.save()
       }
-
       const book = new Book({ ...args, author: author.id })
 
       return book.save().then(book => book.populate('author'))
