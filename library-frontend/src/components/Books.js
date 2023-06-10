@@ -2,12 +2,55 @@ import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../guery'
 
+
+const Table = ({selectedGenre}) => {
+  const result = useQuery(ALL_BOOKS, {
+    variables: { genre: selectedGenre }
+  })
+
+  if (result.loading) {
+    return <div>
+      loading...
+    </div>
+  }
+
+  const books = result.data.allBooks
+
+  return <table>
+    <tbody>
+      <tr>
+        <th></th>
+        <th>author</th>
+        <th>published</th>
+      </tr>
+      {!selectedGenre ?
+        <>
+          {books.map((book) => (
+            <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
+            </tr>
+          ))}
+        </>
+        :
+        <>
+          {books.map((book) => (
+            <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
+            </tr>
+          ))}
+        </>
+      }
+
+    </tbody>
+  </table>
+}
 const Books = (props) => {
   const [selectedGenre, setSelectedGenre] = useState(null)
-  
-  const result = useQuery(ALL_BOOKS, {
-    variables: {genre: selectedGenre}
-  })
+  const result = useQuery(ALL_BOOKS)
 
   if (!props.show) {
     return null
@@ -32,37 +75,7 @@ const Books = (props) => {
         )}
         <button onClick={() => setSelectedGenre(null)}>All genres</button>
       </div>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {!selectedGenre ?
-            <>
-              {books.map((book) => (
-                <tr key={book.title}>
-                  <td>{book.title}</td>
-                  <td>{book.author.name}</td>
-                  <td>{book.published}</td>
-                </tr>
-              ))}
-            </>
-            :
-            <>
-              {books.map((book) => (
-                <tr key={book.title}>
-                  <td>{book.title}</td>
-                  <td>{book.author.name}</td>
-                  <td>{book.published}</td>
-                </tr>
-              ))}
-            </>
-          }
-
-        </tbody>
-      </table>
+    <Table selectedGenre={selectedGenre}/>
     </div >
   )
 }
