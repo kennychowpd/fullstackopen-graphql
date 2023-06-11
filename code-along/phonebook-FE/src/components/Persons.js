@@ -17,6 +17,7 @@ const Person = ({ person, onClose }) => {
 }
 
 const Persons = ({ persons }) => {
+  console.log(persons)
   const [nameToSearch, setNameToSearch] = useState(null)
   const result = useQuery(FIND_PERSON, {
     variables: { nameToSearch },
